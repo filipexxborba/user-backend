@@ -12,7 +12,7 @@ import { generateNewHashcode } from "../utils/hashGen";
 router.get("/", (_, res: Response) => {
   HashModel.find({}, (error: Error, hash) => {
     if (error) res.status(500).send(error);
-    if (!error) res.status(200).send(hash);
+    if (!error) res.status(200).send(hash[0]);
   });
 });
 
