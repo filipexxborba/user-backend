@@ -9,14 +9,27 @@ import { HashModel } from "../models/Hash";
 import { formatDate } from "../utils/dateFormate";
 import { generateNewHashcode } from "../utils/hashGen";
 
+router.get("/create", (_, res: Response) => {
+  const newHash = new HashModel({
+    hashcode: generateNewHashcode(),
+    date: new Date(),
+  });
+  newHash
+    .save()
+    .then((hashcode) => res.status(200).send(hashcode))
+    .catch((error) => res.status(500).send(error));
+});
+
 router.post("/verify", (req: Request, res: Response) => {
   const { verify, date } = req.body;
+  const dateParse = new Date(date);
+  console.log(verify, date, dateParse);
   HashModel.findOne({}, (error: Error, currently: any) => {
     if (error) res.status(500).send(error);
     if (!error) {
       // If body date !== hashdate and the hashcode are the same of the previously date, gen new hashcode
       if (
-        formatDate(date) !== formatDate(currently.date) &&
+        formatDate(dateParse) !== formatDate(currently.date) &&
         verify === currently.hashcode
       ) {
         const newHashcode = generateNewHashcode();
@@ -33,7 +46,7 @@ router.post("/verify", (req: Request, res: Response) => {
 
       //   If body date === today and the hashcode aren't the same
       if (
-        formatDate(date) === formatDate(currently.date) &&
+        formatDate(dateParse) === formatDate(currently.date) &&
         verify !== currently.hashcode
       )
         res.status(200).send(
@@ -44,7 +57,7 @@ router.post("/verify", (req: Request, res: Response) => {
 
       // If are everyone ok
       if (
-        formatDate(date) === formatDate(currently.date) &&
+        formatDate(dateParse) === formatDate(currently.date) &&
         verify === currently.hashcode
       )
         res.status(200).send(
