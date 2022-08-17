@@ -56,9 +56,40 @@ router.post("/create", (req: Request, res: Response) => {
       JSON.stringify({
         status: false,
         message:
-          "Estão fatando alguns dados para concluir o cadastro, favor verifique.",
+          "Estão faltando alguns dados para concluir o cadastro, favor verifique.",
       })
     );
+});
+
+// Return all users Route
+router.get("/users", (_, res: Response) => {
+  UserModel.find({}, (error: Error, users) => {
+    if (error) res.status(500).send(error);
+    if (!error) res.status(200).send(users);
+  });
+});
+
+// Delete an user by id Route
+router.delete("/users", (req: Request, res: Response) => {
+  const { id } = req.body;
+  UserModel.findByIdAndDelete(id, (error: Error, user) => {
+    if (error) res.status(500).send(error);
+    if (!error) res.status(200).send(user);
+  });
+});
+
+// Change the password of user id Route
+router.patch("/users", (req: Request, res: Response) => {
+  const { id, newPassword } = req.body;
+  console.log(id, newPassword);
+  UserModel.findByIdAndUpdate(
+    id,
+    { password: newPassword },
+    (error: Error, user) => {
+      if (error) res.status(500).send(error);
+      if (!error) res.status(200).send(user);
+    }
+  );
 });
 
 export default router;

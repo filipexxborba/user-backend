@@ -16,6 +16,7 @@ router.get("/", (_, res: Response) => {
   });
 });
 
+// Route to create a new hashcode
 router.get("/create", (_, res: Response) => {
   const newHash = new HashModel({
     hashcode: generateNewHashcode(),
@@ -27,6 +28,7 @@ router.get("/create", (_, res: Response) => {
     .catch((error) => res.status(500).send(error));
 });
 
+// Verify hashcode route
 router.post("/verify", (req: Request, res: Response) => {
   const { verify, date } = req.body;
   const dateParse = new Date(date);
