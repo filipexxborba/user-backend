@@ -1,6 +1,5 @@
 require("dotenv").config();
 import express, { Application } from "express";
-import mongoose from "mongoose";
 import cors from "cors";
 import authRoute from "./routes/auth.route";
 import hashRoute from "./routes/hash.route";
